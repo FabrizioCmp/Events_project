@@ -1,5 +1,14 @@
 const express = require('express')
+const mysql = require('mysql2')
+
 const app = express()
+// mysql.createPool({
+//     host: '127.0.0.1',
+//     user : 'root',
+//     password: 'Ipgeuniev3,14',
+//     database: 'events_app'
+// })
+
 
 //impostazioni server
 app.set('view engine', 'ejs')
