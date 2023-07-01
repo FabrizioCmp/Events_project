@@ -23,6 +23,13 @@ app.get("/", middleware, (req, res) =>{
     res.render('index', { text: 'WORLD'})
 })
 
+app.get("/login", (req, res)=>{
+    res.render('login')
+})
+app.get("/register", (req, res)=>{
+    res.render('register')
+})
+
 //Routing
 const userRouter = require('./routes/users')
 app.use('/user', userRouter)
