@@ -19,4 +19,4 @@ function changeEvent(){
   }
 }
 
-setInterval(changeEvent, 1000)
+//setInterval(changeEvent, 1000)

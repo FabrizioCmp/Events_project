@@ -1,7 +1,9 @@
 const express = require('express')
+const mid = require('../middleware/user.js')
 const router = express.Router()
 
-router.use(middlewareLogIn)
+
+router.use(mid.middlewareLogIn)
 
 router.get("/", (req,res) =>{
     res.send("user  home")
@@ -16,11 +18,6 @@ router.get('/:id', (req, res) =>{
     res.send(`getting user ${userID}`)
 })
 
-//middleware per la rotta user
-function middlewareLogIn(req, res, next) {
-    console.log('check login')
-    next()
-}
 
 //user routing middleware per ogni volta che è presente id nella rotta 
 router.param("id", (req, res, next, id) => {
