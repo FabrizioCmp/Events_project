@@ -1,17 +1,23 @@
 const express = require('express')
 const mysql = require('mysql2')
 const bcrypt = require('bcrypt')
+const pport = require('passport')
+const db = require('./db/database')
+require('dotenv').config()
+
+const pool =  mysql.createPool({
+    host: process.env.DB_HOST,
+    user: 'root',
+    password: process.env.DB_PSW,
+    database: 'test_events',
+}).promise()
+
+const initPassport = require('./passport_config')
+//initPassport(passport, email)
 
 const users = []
 
 const app = express()
-// mysql.createPool({
-//     host: '127.0.0.1',
-//     user : 'root',
-//     password: 'Ipgeuniev3,14',
-//     database: 'events_app'
-// })
-
 
 //impostazioni server
 app.set('view engine', 'ejs')
@@ -38,12 +44,13 @@ app.post('/register', async (req,res)=>{
     try{
         const hashedpswd = await bcrypt.hash(req.body.password, 10)
         users.push({
-            id: Date.now().toString(),
             name: req.body.name,
             lastname: req.body.lastname,
             email: req.body.email,
             password: hashedpswd
         })
+
+        user = db.createUser(req.body.name,req.body.lastname, req.body.email, hashedpswd)
 
         res.redirect('/login')
     }catch{
@@ -52,8 +59,14 @@ app.post('/register', async (req,res)=>{
     console.log(users)
 })
 
+app.get('/login', (req, res) =>{
+    res.render('login')
+})
+
 //Routing
 const userRouter = require('./routes/users')
+const passport = require('passport')
+const { emit } = require('nodemon')
 app.use('/user', userRouter)
 
 

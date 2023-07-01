@@ -1,6 +1,16 @@
 const express = require('express')
 const mid = require('../middleware/user.js')
 const router = express.Router()
+const mysql = require('mysql2')
+const db = require('../db/database.js')
+require('dotenv').config()
+
+const pool =  mysql.createPool({
+    host: process.env.DB_HOST,
+    user: 'root',
+    password: process.env.DB_PSW,
+    database: 'test_events',
+}).promise()
 
 
 router.use(mid.middlewareLogIn)
@@ -13,9 +23,10 @@ router.get("/profile", (req,res) =>{
     res.send("user  profile")
 })
 
-router.get('/:id', (req, res) =>{
-    let userID = req.params.id
-    res.send(`getting user ${userID}`)
+router.get('/:id', async(req, res) =>{
+    const user = await db.getUserById(1)
+    console.log(user)
+    res.send(user)
 })
 
 
