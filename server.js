@@ -3,6 +3,7 @@ const mysql = require('mysql2')
 const bcrypt = require('bcrypt')
 const pport = require('passport')
 const db = require('./db/database')
+const session = require('express-session')
 require('dotenv').config()
 
 const pool =  mysql.createPool({
@@ -12,9 +13,6 @@ const pool =  mysql.createPool({
     database: 'test_events',
 }).promise()
 
-const initPassport = require('./passport_config')
-//initPassport(passport, email)
-
 const users = []
 
 const app = express()
@@ -23,6 +21,14 @@ const app = express()
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false}))
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    cookie: {
+        sameSite: 'strict'
+    },
+    resave: false,
+    saveUninitialized: true, 
+}))
 
 
 //porta del server
@@ -43,25 +49,27 @@ app.get("/register", (req, res)=>{
 app.post('/register', async (req,res)=>{
     try{
         const hashedpswd = await bcrypt.hash(req.body.password, 10)
-        users.push({
-            name: req.body.name,
-            lastname: req.body.lastname,
-            email: req.body.email,
-            password: hashedpswd
-        })
 
-        user = db.createUser(req.body.name,req.body.lastname, req.body.email, hashedpswd)
-
+        user = await db.createUser(req.body.name,req.body.lastname, req.body.email, hashedpswd)
+        us = await db.getUserByEmail('prossi@mail.com')
+        console.log(us)
         res.redirect('/login')
     }catch{
         res.redirect('/register')
     }
-    console.log(users)
 })
 
-app.get('/login', (req, res) =>{
-    res.render('login')
+app.post('/login', async (req, res) => {
+    if(req.body.email && req.body.password){
+        const {email, password} = req.body
+
+        usr = await db.getUserByEmail(email)
+        console.log(usr.password)
+
+        res.render('/profile')
+    }
 })
+
 
 //Routing
 const userRouter = require('./routes/users')

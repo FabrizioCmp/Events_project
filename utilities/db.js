@@ -5,4 +5,3 @@ async function getUserById(id){
     return res
 }
 
-console.log(getUserById(1))

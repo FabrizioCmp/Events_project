@@ -18,10 +18,22 @@ async function getUserById(id){
 }
 
 async function createUser(name, lastname, email, pswd){
+    const search = await getUserByEmail(email)
+    if(search == null){
     const user = await pool.query(`
             INSERT INTO User (email, password, name, lastname)
             VALUES (?,?,?,?)
             `, [email, pswd, name, lastname])
-    return user
+    return user[0]
+    }
 }
-module.exports = {getUserById, createUser}
+
+async function getUserByEmail(email){
+    const user = await pool.query(`
+            SELECT *
+            FROM User
+            WHERE  email = ?
+    `, [email])
+    return user[0][0].email ? user[0][0] : null
+}
+module.exports = {getUserById, createUser, getUserByEmail}
