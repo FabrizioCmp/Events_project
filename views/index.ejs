@@ -13,9 +13,13 @@
 
    <button type="button" class="btn btn-primary">Primary</button>
    
-   <a class="btn btn-secondary" href="/login">Login</a>
-   <a class="btn btn-secondary" href="/register">Register</a>
-
+   <% if(!logged){ %>
+    <a class="btn btn-secondary" href="/login">Login</a>
+    <a class="btn btn-secondary" href="/register">Register</a>
+   <% }else {%>
+    <h1>ciao <%= userName %></h1>
+    <a class="btn btn-danger" href="/logout">Logout</a>
+   <% } %>
 </body>
 
 <script src="JS/main.js"></script>

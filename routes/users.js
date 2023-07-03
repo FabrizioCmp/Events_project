@@ -5,6 +5,8 @@ const mysql = require('mysql2')
 const db = require('../db/database.js')
 require('dotenv').config()
 
+
+
 const pool =  mysql.createPool({
     host: process.env.DB_HOST,
     user: 'root',
@@ -19,8 +21,9 @@ router.get("/", (req,res) =>{
     res.send("user  home")
 })
 
-router.get("/profile", (req,res) =>{
-    res.send("user  profile")
+router.get('/profile', (req, res) => {
+    
+    res.render('profile')
 })
 
 router.get('/:id', async(req, res) =>{
@@ -28,6 +31,8 @@ router.get('/:id', async(req, res) =>{
     console.log(user)
     res.send(user)
 })
+
+
 
 
 //user routing middleware per ogni volta che è presente id nella rotta 
