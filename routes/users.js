@@ -17,12 +17,9 @@ const pool =  mysql.createPool({
 
 router.use(mid.middlewareLogIn)
 
-router.get("/", (req,res) =>{
-    res.send("user  home")
-})
 
 router.get('/profile', (req, res) => {
-    
+
     res.render('profile')
 })
 

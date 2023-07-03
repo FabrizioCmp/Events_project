@@ -5,14 +5,13 @@ const db = require('./db/database')
 const session = require('express-session')
 require('dotenv').config()
 
+// Connessione al DB
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: 'root',
     password: process.env.DB_PSW,
     database: 'test_events',
 }).promise()
-
-const users = []
 
 const app = express()
 
@@ -33,72 +32,103 @@ app.use(session({
 //porta del server
 app.listen(3001)
 
+//Rotte base
 app.get("/", middleware, (req, res) => {
     logged = req.session.logged
     uName = req.session.userName
     res.render('index', {
-         text: 'WORLD',
-         logged: logged,
-         userName: uName,
- })
+        text: 'WORLD',
+        logged: logged,
+        userName: uName,
+    })
 })
 
-app.get("/login", (req, res) => {
-    res.render('login')
-})
-app.get("/register", (req, res) => {
-    res.render('register')
-})
-
-app.get("/logout", (req, res) => {
-    req.session.destroy()
-    res.redirect('login')
-})
 
 //Auth routes
+app.get('/register', (req, res) => {
+    res.render('register', {
+        oldUsername: null,
+        oldEmail: null,
+        oldPassword: null,
+    })
+})
+
 app.post('/register', async (req, res) => {
-    try {
-
+    
+    user = db.getUserByUsername(req.body.username)
+    if( user == null){
         const hashedpswd = await bcrypt.hash(req.body.password, 10)
-
-        user = await db.createUser(req.body.name, req.body.lastname, req.body.email, hashedpswd)
-
-        us = await db.getUserByEmail('prossi@mail.com')
-
-        console.log(us)
+        console.log(2)
+        user = await db.createUser(req.body.email, req.body.username, hashedpswd)
+        console.log(2)
+    
         res.redirect('/login')
-    } catch {
-        res.redirect('/register')
+    }else{
+        res.redirect('/register',{
+            oldUsername: req.body.username,
+            oldEmail: req.body.email,
+            oldPassword: req.body.password,
+        })
     }
+
+   
+
+    res.redirect('/register', {
+        oldUsernme: req.body.username,
+        oldEmail: req.body.email,
+        oldpassword: req.body.password,
+    })
+
+})
+
+app.get('/login', (req, res) => {
+    res.render('login', {
+        oldUsername: null,
+        notRegistered: false,
+        errorPswd: false,
+    })
 })
 
 app.post('/login', async (req, res) => {
-    if (req.body.email && req.body.password) {
-        const { email, password } = req.body
+    if (req.body.username && req.body.password) {
+        const { username, email, password } = req.body
 
-        usr = await db.getUserByEmail(email)
+        usr = await db.getUserByUsername(username)
         if (usr != null) {
-            
+
             bcrypt.compare(password, usr.password, (err, result) => {
                 if (err) {
                     console.error('Errore durante il Login')
                 }
 
                 if (result) {
-                    req.session.userName = usr.name
+                    req.session.user = usr
                     req.session.userID = usr.id
                     req.session.logged = true
                     res.redirect('user/profile',)
                 } else {
-                    res.render('login')
+                    res.render('login', {
+                        oldUsername: username,
+                        notRegistered: false,
+                        errorPswd: true,
+                    })
                     console.log('password errata')
                 }
             })
-        }else{
-            res.render('login')
+        } else {
+            res.render('login', {
+                oldUsername: username,
+                notRegistered: true,
+                errorPswd: false,
+            })
             console.log('utente non registrato')
         }
     }
+})
+
+app.get("/logout", (req, res) => {
+    req.session.destroy()
+    res.redirect('login')
 })
 
 

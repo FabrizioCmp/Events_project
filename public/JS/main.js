@@ -19,4 +19,13 @@ function changeEvent(){
   }
 }
 
+function validatePassword(event){
+  let pswd = document.getElementById("password").value
+  let confirmPswd = document.getElementById("confirm").value
+
+  const form = getElementById("register_form")
+
+
+}
+
 //setInterval(changeEvent, 1000)

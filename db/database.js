@@ -5,28 +5,41 @@ const pool =  mysql.createPool({
     host: process.env.DB_HOST,
     user: 'root',
     password: process.env.DB_PSW,
-    database: 'test_events',
+    database: process.env.DB_NAME
 }).promise()
 
 async function getUserById(id){
     const res = await pool.query(`
-            SELECT email 
-            FROM User 
+            SELECT * 
+            FROM Users 
             WHERE id = ?
             `, [id] )
     return res[0]
 }
 
-async function createUser(name, lastname, email, pswd){
+async function getUserByUsername(username){
+    const res = await pool.query(`
+            SELECT *
+            FROM Users
+            WHERE username = ?
+        `,[username])
+        if(res[0].length != 0){
+            return res[0][0]
+        }else{
+            return null
+        }
+}
+
+async function createUser(email, username, pswd){
    
     const search = await getUserByEmail(email)
     console.log(search)
    
     if(search == null){
     const user = await pool.query(`
-            INSERT INTO User (email, password, name, lastname)
-            VALUES (?,?,?,?)
-            `, [email, pswd, name, lastname])
+            INSERT INTO Users (email, username, password)
+            VALUES (?,?,?)
+            `, [email, username, pswd])
     return user[0]
     }else{
         console.log('utente  non creato')
@@ -34,17 +47,16 @@ async function createUser(name, lastname, email, pswd){
 }
 
 async function getUserByEmail(email){
-    console.log(1)
     const user = await pool.query(`
             SELECT *
-            FROM User
+            FROM Users
             WHERE  email = ?
     `, [email])
-    
+
     if(user[0].length != 0){
         return user[0][0]
     }else{
         return null
     }
 }
-module.exports = {getUserById, createUser, getUserByEmail}
+module.exports = {getUserById, createUser, getUserByEmail, getUserByUsername}

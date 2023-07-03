@@ -1,9 +1,10 @@
 CREATE DATABASE events_app;
 USE events_app;
 
-CREATE TABLE User(
+CREATE TABLE Users(
     id INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL
 )
 
@@ -17,7 +18,7 @@ CREATE TABLE Events(
     address VARCHAR(255) NOT NULL,
     max_participants INTEGER NOT NULL,
     creator INT NOT NULL,
-    FOREIGN KEY (creator) REFERENCES User(id)
+    FOREIGN KEY (creator) REFERENCES Users(id)
 )
 
 CREATE TABLE Participants(
