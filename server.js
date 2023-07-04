@@ -30,7 +30,9 @@ app.use(session({
 
 
 //porta del server
-app.listen(3001)
+app.listen(process.env.SERVER_PORT, () => {
+    console.log(`Server running at PORT: ${process.env.SERVER_PORT}`)
+})
 
 //Rotte base
 app.get("/", middleware, (req, res) => {
@@ -54,30 +56,41 @@ app.get('/register', (req, res) => {
 })
 
 app.post('/register', async (req, res) => {
-    
-    user = db.getUserByUsername(req.body.username)
-    if( user == null){
-        const hashedpswd = await bcrypt.hash(req.body.password, 10)
-        console.log(2)
-        user = await db.createUser(req.body.email, req.body.username, hashedpswd)
-        console.log(2)
-    
-        res.redirect('/login')
-    }else{
-        res.redirect('/register',{
+
+    user = await db.getUserByUsername(req.body.username)
+    errorPswd = false
+    errorUser = false
+
+    //se user = null allora si tratta di un nuovo utente -> controllo vadilità pswd
+    if (user == null) {
+
+        //controllo uguaglianza password e password di conferma
+        if (req.body.password == req.body.confirm) {
+            const hashedpswd = await bcrypt.hash(req.body.password, 10)
+            user = await db.createUser(req.body.email, req.body.username, hashedpswd)
+            app.redirect('login')
+
+        } else {
+            // le due password sono diverse
+            errorPswd = true
+            res.render('register', {
+                oldUsername: req.body.username,
+                oldEmail: req.body.email,
+                oldPassword: req.body.password,
+                differentPswd: errorPswd,
+            })
+        }
+    } else {
+    // si tratta di un username già presente -> reindirizzo al form di registrazione mosrtando un Alert
+    // e ricompilando i campi con i dati precedentemente inseriti
+        errorUser = true
+        res.render('register', {
             oldUsername: req.body.username,
             oldEmail: req.body.email,
             oldPassword: req.body.password,
+            userTaken: errorUser
         })
     }
-
-   
-
-    res.redirect('/register', {
-        oldUsernme: req.body.username,
-        oldEmail: req.body.email,
-        oldpassword: req.body.password,
-    })
 
 })
 

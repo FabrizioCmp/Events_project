@@ -10,7 +10,21 @@
 </head>
 
 <body>
+
+    <%- include('includes/header.ejs') %>
+
     <form action="/register" method="POST">
+        <% if(locals.differentPswd || locals.userTaken){%>
+            <div class="alert alert-danger w-50 text-center" role="alert">
+                <h3 class="text-center">&#9888</h3>
+                <% if(locals.differentPswd){%>
+                <p class="mb-0">- Le due password non coincidono</p>
+                <% } %>
+                <% if(locals.userTaken){%>
+                <p class="mb-0">- Username già in uso</p>
+                <% } %>
+              </div>
+        <% } %>
         <div>
             <label for="username">Username</label>
             <input type="text" id="username" name="username" value="<%= oldUsername %>" required>
