@@ -19,8 +19,11 @@ router.use(mid.middlewareLogIn)
 
 
 router.get('/profile', (req, res) => {
-
-    res.render('profile')
+    if(req.session.logged == true){
+        res.render('profile')
+    }else{
+        res.redirect('/login')
+    }
 })
 
 router.get('/:id', async(req, res) =>{

@@ -35,13 +35,16 @@ app.listen(process.env.SERVER_PORT, () => {
 })
 
 //Rotte base
-app.get("/", middleware, (req, res) => {
+app.get("/", middleware, async (req, res) => {
+    const cardslist = await db.getEvents()
+    console.log(cardslist)
     logged = req.session.logged
     uName = req.session.userName
     res.render('index', {
         text: 'WORLD',
         logged: logged,
         userName: uName,
+        cards: cardslist,
     })
 })
 
@@ -147,8 +150,10 @@ app.get("/logout", (req, res) => {
 
 //Routing
 const userRouter = require('./routes/users')
+const eventRouter = require('./routes/events')
 const { emit } = require('nodemon')
 app.use('/user', userRouter)
+app.use('/event', eventRouter)
 
 
 

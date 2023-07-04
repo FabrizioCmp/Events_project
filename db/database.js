@@ -59,4 +59,21 @@ async function getUserByEmail(email){
         return null
     }
 }
-module.exports = {getUserById, createUser, getUserByEmail, getUserByUsername}
+
+async function getEvents(){
+    const events = await pool.query(`
+            SELECT * 
+            FROM Events
+            ORDER BY date, time
+        `)
+    return events[0]
+}
+
+async function createEvent(event){
+    const eventCreated = await pool.query(`
+        INSERT INTO Events (title, description, image, date, time, address, max_participants, creator)
+        VALUES (?,?,?,?,?,?,?,?)
+    `, [event.title, event.description, " ", event.date, event.time, event.address, event.partecipants, event.creator])
+    return eventCreated[0]
+}
+module.exports = {getUserById, createUser, getUserByEmail, getUserByUsername, createEvent, getEvents}

@@ -21,6 +21,14 @@
     <h1>ciao <%= userName %></h1> 
     <a class="btn btn-danger" href="/logout">Logout</a>
    <% } %>
+
+   <div class="container">
+    <% for (let i=0; i< cards.length; i++) {%>
+        <%- include('includes/card.ejs', { card: cards[i]})  %>
+    <% } %>
+   </div>
+
+   <%- include('includes/footer.ejs')  %>
 </body>
 
 <script src="JS/main.js"></script>
