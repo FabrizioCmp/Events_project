@@ -1,7 +1,10 @@
-
-
-<div class="mycard">
-    <div><%= card.title  %></div>
-    <div><%= card.time %></div>
-</div>
-
+<a class="card_link" href="/event/<%=card.id%>">
+    <div class="mycard">
+        <div >
+            <%= card.title %>
+        </div>
+        <div>
+            <%= card.time %>
+        </div>
+    </div>    
+</a>

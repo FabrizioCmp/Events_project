@@ -14,7 +14,7 @@ routerE.get('/create', (req, res) =>{
     
 })
 
-routerE.post('/create', (req, res) =>{
+routerE.post('/create', async (req, res) =>{
     const event = {
         creator: req.session.userID,
         title: req.body.title,
@@ -24,9 +24,25 @@ routerE.post('/create', (req, res) =>{
         partecipants: req.body.partecipants,
         description: req.body.description
     }
-    eventCreated = db.createEvent(event)
+    eventCreated = await db.createEvent(event)
     res.redirect('/user/profile')
 })
 
+routerE.get('/:id', async (req, res) =>{
+
+    if(req.session.logged){
+        const singleEvent = await db.getEventById(req.params.id)
+        const creatorId = singleEvent?.creator ?? null
+        if(creatorId == req.session.userID){
+            res.render('eventpage', {event: singleEvent})
+        }else{
+            res.redirect('/')
+        }
+    }else{
+        res.redirect('/login')
+    }
+   
+    
+})
 
 module.exports = routerE

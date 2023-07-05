@@ -8,6 +8,11 @@
     display: inline-block;
 }
 
+.card_link{
+    text-decoration: none;
+    color: black;
+}
+
 .horizontal_box{
     width: 500px;
     overflow-x: scroll;

@@ -66,6 +66,20 @@ async function getEvents(){
             FROM Events
             ORDER BY date, time
         `)
+    if(events[0].length != 0){
+        return events[0]
+    }else{
+        return null
+    }
+}
+
+async function getUserEvents(id){
+    const events = await pool.query(`
+            SELECT *
+            FROM Events 
+            WHERE creator = ?
+        `, [id])
+
     return events[0]
 }
 
@@ -76,4 +90,13 @@ async function createEvent(event){
     `, [event.title, event.description, " ", event.date, event.time, event.address, event.partecipants, event.creator])
     return eventCreated[0]
 }
-module.exports = {getUserById, createUser, getUserByEmail, getUserByUsername, createEvent, getEvents}
+
+async function getEventById(id){
+    const event = await pool.query(`
+                SELECT *
+                FROM Events
+                WHERE id = ?
+        `, [id])
+    return event[0][0]
+}
+module.exports = {getUserById, createUser, getUserByEmail, getUserByUsername, createEvent, getEvents, getUserEvents, getEventById}

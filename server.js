@@ -36,15 +36,20 @@ app.listen(process.env.SERVER_PORT, () => {
 
 //Rotte base
 app.get("/", middleware, async (req, res) => {
-    const cardslist = await db.getEvents()
-    console.log(cardslist)
+    const elist = await db.getEvents()
+    let uEvents = null
     logged = req.session.logged
     uName = req.session.userName
+    if(logged){
+        id = req.session.userID
+        uEvents = await db.getUserEvents(id)
+    }
     res.render('index', {
         text: 'WORLD',
         logged: logged,
         userName: uName,
-        cards: cardslist,
+        eventsList: elist,
+        userEvents: uEvents,
     })
 })
 
@@ -71,7 +76,7 @@ app.post('/register', async (req, res) => {
         if (req.body.password == req.body.confirm) {
             const hashedpswd = await bcrypt.hash(req.body.password, 10)
             user = await db.createUser(req.body.email, req.body.username, hashedpswd)
-            app.redirect('login')
+            res.redirect('login')
 
         } else {
             // le due password sono diverse
