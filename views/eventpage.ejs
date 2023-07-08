@@ -13,7 +13,28 @@
     <div class="container">
         <h3><%= event.title%></h3>
         <h3><%= event.description%></h3>
+        <% if(event.image){ %>
+            <img style="width: 100px;" src="/<%=event.image  %>" alt="immagine evento">
+        <% } %>
+       
     </div>
+    <button onclick="confirmDelete(<%= event.id %>)" class="btn btn-danger">Cancella evento</button>
+    <a class="btn btn-success" href="/event/update/<%=event.id%>">Modifica evento</a>
     <%- include('includes/footer.ejs') %>
 </body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function confirmDelete(id){
+        if(confirm("sei sicuro di voler cancelare questo evento?")){
+            $.ajax({
+                url: '/event/' + id,
+                method: "DELETE",
+                success: function(response) {
+                    window.location.href = "/"
+                }
+            })
+        }
+    }
+</script>
 </html>

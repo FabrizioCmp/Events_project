@@ -29,9 +29,11 @@
 
     <!-- all events box -->
          <div class="horizontal_box">
+            <% if(eventsList){ %>
               <% for (let i=0; i< eventsList.length; i++) {%>
                   <%- include('includes/card.ejs', { card: eventsList[i]}) %>
               <% } %>
+            <% } %>
           </div>
 
     <!-- user events box -->

@@ -3,19 +3,13 @@ const mysql = require('mysql2')
 const bcrypt = require('bcrypt')
 const db = require('./db/database')
 const session = require('express-session')
+
 require('dotenv').config()
 
-// Connessione al DB
-const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: 'root',
-    password: process.env.DB_PSW,
-    database: 'test_events',
-}).promise()
 
-const app = express()
 
 //impostazioni server
+const app = express()
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }))
@@ -157,6 +151,7 @@ app.get("/logout", (req, res) => {
 const userRouter = require('./routes/users')
 const eventRouter = require('./routes/events')
 const { emit } = require('nodemon')
+const multer = require('multer')
 app.use('/user', userRouter)
 app.use('/event', eventRouter)
 

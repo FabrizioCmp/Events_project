@@ -87,7 +87,7 @@ async function createEvent(event){
     const eventCreated = await pool.query(`
         INSERT INTO Events (title, description, image, date, time, address, max_participants, creator)
         VALUES (?,?,?,?,?,?,?,?)
-    `, [event.title, event.description, " ", event.date, event.time, event.address, event.partecipants, event.creator])
+    `, [event.title, event.description, event.filePath, event.date, event.time, event.address, event.partecipants, event.creator])
     return eventCreated[0]
 }
 
@@ -99,4 +99,53 @@ async function getEventById(id){
         `, [id])
     return event[0][0]
 }
-module.exports = {getUserById, createUser, getUserByEmail, getUserByUsername, createEvent, getEvents, getUserEvents, getEventById}
+
+async function updateEvent(e){
+    const event = await pool.query(`
+            UPDATE Events
+            SET title = ?, description = ?, image = ?, date = ?, time = ?, address = ?, max_participants = ?
+            WHERE id = ?
+    `, [e.title, e.description, e.image, e.date, e.time, e.address, e.max_participants, e.id])
+    return event
+}
+
+async function getMaxParticipants(id){
+    const part = await pool.query(`
+            SELECT max_participants
+            FROM Events
+            WHERE id = ?
+    `, [id])
+    return part[0]
+}
+async function getCountParticipants(event){
+    const count = await pool.query(`
+            SELECT COUNT(id) AS count
+            FROM Participants
+            WHERE event = ?
+    `,[event])
+
+    return count[0]
+}
+async function deleteEvent(id){
+    const event = await pool.query(`
+            DELETE FROM Events
+            WHERE id = ?
+        `, [id])
+}
+
+async function getParticipantByEmail(email){
+    const participant = await pool.query(`
+            SELECT * 
+            FROM Participants
+            WHERE email = ?
+        `, [email])
+
+    if(participant[0].length != 0){
+            return participant[0]
+     }else{
+            return null
+     } 
+}
+
+
+module.exports = {getUserById, createUser, getUserByEmail, getUserByUsername, createEvent, getEvents, getUserEvents, getEventById, updateEvent, getParticipantByEmail , deleteEvent, getMaxParticipants, getCountParticipants}
