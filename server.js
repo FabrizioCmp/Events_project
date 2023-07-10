@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const db = require('./db/database')
 const session = require('express-session')
 
+
 require('dotenv').config()
 
 
@@ -13,6 +14,7 @@ const app = express()
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }))
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     cookie: {
@@ -31,14 +33,14 @@ app.listen(process.env.SERVER_PORT, () => {
 //Rotte base
 app.get("/", async (req, res) => {
     const elist = await db.getEvents()
-    elist.forEach(element => {
+    elist?.forEach(element => {
         let d = new Date(element.date)
         element.date = d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear()
     });
     let uEvents = null
     logged = req.session.logged
     uName = req.session.user
-    if(logged){
+    if (logged) {
         id = req.session.userID
         uEvents = await db.getUserEvents(id)
         uEvents.forEach(element => {
@@ -93,8 +95,8 @@ app.post('/register', async (req, res) => {
             })
         }
     } else {
-    // si tratta di un username già presente -> reindirizzo al form di registrazione mosrtando un Alert
-    // e ricompilando i campi con i dati precedentemente inseriti
+        // si tratta di un username già presente -> reindirizzo al form di registrazione mosrtando un Alert
+        // e ricompilando i campi con i dati precedentemente inseriti
         errorUser = true
         res.render('register', {
             oldUsername: req.body.username,
@@ -157,39 +159,54 @@ app.get("/logout", (req, res) => {
     res.redirect('login')
 })
 
-app.get("/userProfile", async(req,res) =>{
-   
-    if(req.session.logged == true){
+app.get("/userProfile", async (req, res) => {
+
+    if (req.session.logged == true) {
         //query a database
         const u = await db.getUserById(req.session.userID) // ritorna informazioni utente loggato
         const Euser = await db.getUserEvents(req.session.userID) // ritorna eventi creati dall' utente
         const userPart = await db.getUserPart(u[0].email)  //ritrona array di ID relativi algli eventi partecipati dall'utente
-        const userEparts = await db.getEventsfromPart(userPart) // ritorna array degli eventi partecipati dall'utente
+        let userEparts = []
+        if (userPart.length != 0) {
+            userEparts = await db.getEventsfromPart(userPart) // ritorna array degli eventi partecipati dall'utente
+        }
 
         console.log(u[0])
 
         //modifica formato data e orario
         userEparts.forEach(element => {
             let d = new Date(element.date)
-            element.date = d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear()
-            element.time = element.time.slice(0,5)
+            const month = d.getMonth() + 1
+            element.date = d.getDate() + "-" + month + "-" + d.getFullYear()
+            element.time = element.time.slice(0, 5)
         });
         Euser.forEach(element => {
             let d = new Date(element.date)
-            element.date = d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear()
-            element.time = element.time.slice(0,5)
+            const umonth = d.getMonth() + 1
+            element.date = d.getDate() + "-" + umonth + "-" + d.getFullYear()
+            element.time = element.time.slice(0, 5)
         });
 
-        res.render('userprofile',{
+        res.render('userprofile', {
             logged: req.session.logged,
             user: u[0],
             userEvents: Euser,
             userParticipations: userPart,
-            userEventsParticipations : userEparts
+            userEventsParticipations: userEparts
         })
-    }else{
+    } else {
         res.redirect('/login')
     }
+})
+
+app.delete('/part/:id', async (req, res) => {
+    const u = await db.getUserById(req.session.userID)
+    console.log(req.params.id)
+    console.log(u[0].email)
+    const p = await db.deletePart(req.params.id, u[0].email)
+    console.log('parteciapzione cancellata--------')
+    console.log(p[0])
+    res.send({ message: "partecipazione cancellata" })
 })
 
 

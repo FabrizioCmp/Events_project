@@ -20,13 +20,15 @@
 </head>
 
 <style>
-    label{
+    label {
         font-weight: bold;
     }
-    input{
+
+    input {
         border-radius: 5px;
     }
-    textarea{
+
+    textarea {
         border-radius: 5px;
     }
 </style>
@@ -34,55 +36,56 @@
 <body>
     <%- include('../includes/header.ejs',{log: logged}) %>
 
-    <h1 class="text-center">Crea il tuo evento</h1>
+        <h1 class="text-center">Crea il tuo evento</h1>
         <div class="form_section">
             <div class="container">
-
-                <form class="form_create py-5" action="/event/create" method="POST" enctype="multipart/form-data">
-                    <div class="row ">
-                        <div class="col-6 justify-content-start mb-2">
-                            <div class="d-flex flex-column ">
-                                <label class="d-block" for="title">Titolo</label>
-                                <input class="" type="text" id="title" name="title" required>
+                <div class="py-5">
+                    <form class="form_create" action="/event/create" method="POST" enctype="multipart/form-data">
+                        <div class="row ">
+                            <div class="col-6 justify-content-start mb-2">
+                                <div class="d-flex flex-column ">
+                                    <label class="d-block" for="title">Titolo</label>
+                                    <input class="" type="text" id="title" name="title" required>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <label class="d-block" for="date">Data</label>
+                                <input id="date" name="date" type="date" required>
                             </div>
                         </div>
-                        <div class="col-6 mb-2">
-                            <label class="d-block" for="date">Data</label>
-                            <input id="date" name="date" type="date" required>
+
+                        <div class="row">
+                            <div class="col-3 mb-2">
+                                <label class="d-block" for="tiem">Orario</label>
+                                <input id="time" name="time" type="time" required>
+                            </div>
+                            <div class="col-9 mb-2">
+                                <label class="d-block" for="address">Indirizzo</label>
+                                <input class="w-100" type="text" id="address" name="address" required>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-3 mb-2">
-                            <label class="d-block" for="tiem">Orario</label>
-                            <input id="time" name="time" type="time" required>
+                        <div class="mb-2">
+                            <label for="image">Immagine</label>
+                            <input type="file" name="image" id="image">
                         </div>
-                        <div class="col-9 mb-2">
-                            <label class="d-block" for="address">Indirizzo</label>
-                            <input class="w-100" type="text" id="address" name="address" required>
+
+                        <div>
+                            <label for="partecipants">Numero massimo partecipanti</label>
+                            <input type="number" name="partecipants" id="partecipants" min="1" step="1" required>
                         </div>
-                    </div>
-                  
-                    <div class="mb-2">
-                        <label for="image">Immagine</label>
-                        <input type="file" name="image" id="image">
-                    </div>
 
-                    <div>
-                        <label for="partecipants">Numero massimo partecipanti</label>
-                        <input type="number" name="partecipants" id="partecipants" min="1" step="1" required>
-                    </div>
+                        <div>
+                            <label class="d-block" for="description">Descrizione</label>
+                            <textarea name="description" id="description" cols="30" rows="10"></textarea>
+                        </div>
 
-                    <div>
-                        <label class="d-block" for="description">Descrizione</label>
-                        <textarea name="description" id="description" cols="30" rows="10"></textarea>
-                    </div>
-
-                    <button class="mybtn_neg">Crea</button>
-                    <a class="btn btn-secondary" href="/userProfile">Indietro</a>
-                </form>
+                        <button class="mybtn_neg">Crea</button>
+                        <a class="btn btn-secondary" href="/userProfile">Indietro</a>
+                    </form>
+                </div>
             </div>
-           
+
         </div>
 
         <%- include('../includes/footer.ejs') %>

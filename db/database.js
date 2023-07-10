@@ -191,4 +191,13 @@ async function getEventsfromPart(arrayId){
     return events[0]
 }
 
-module.exports = {getUserById, createUser, getUserByEmail, getUserByUsername, createEvent, getEvents, getUserEvents, getEventById, updateEvent, getParticipantByEmail , deleteEvent, getMaxParticipants, getThisEventUserPart, getEventsfromPart, getCountParticipants, addParticipant, getUserPart}
+async function deletePart(event, email){
+    const e = await pool.query(`
+            DELETE FROM Participants
+            WHERE event = ? AND email = ?
+        `, [event, email])
+    console.log(event, email)
+    return e
+}
+
+module.exports = {getUserById, createUser, getUserByEmail, getUserByUsername, createEvent, getEvents, getUserEvents, getEventById, updateEvent, getParticipantByEmail , deleteEvent, getMaxParticipants, getThisEventUserPart, getEventsfromPart, getCountParticipants, addParticipant, getUserPart, deletePart}

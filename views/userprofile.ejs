@@ -68,7 +68,9 @@
                         </div>
                         <div class="col">
                             <div class="d-flex justify-content-end">
-                                <a class="btn btn-danger" href="">Cancella partecipazione</a>
+                                <button class="btn btn-danger"
+                                    onclick="confirmPartDelete(<%= userEventsParticipations[i].id%>)">Cancella
+                                    partecipazione</button>
                             </div>
                         </div>
 
@@ -83,18 +85,22 @@
 
         <!-- Lista eventi creati dall'utente -->
         <div class="container mt-3">
-           <h3 class="my-5">I tuoi eventi:</h3>
-            <div class="row justify-content-center">
-                <div class="horizontal_box ">
-                    <div class=" h-100 d-flex  align-items-center">
-                        <% if(userEvents){ %>
-                            <% for (let i=0; i< userEvents.length; i++) {%>
-                                <%- include('includes/card.ejs', { card: userEvents[i]}) %>
-                                    <% } %>
+            <h3 class="my-5">I tuoi eventi:</h3>
+            <% if(locals.userEvents.length>0){ %>
+                <div class="row justify-content-center">
+                    <div class="horizontal_box ">
+                        <div class=" h-100 d-flex  align-items-center">
+                            <% if(userEvents){ %>
+                                <% for (let i=0; i< userEvents.length; i++) {%>
+                                    <%- include('includes/card.ejs', { card: userEvents[i]}) %>
                                         <% } %>
+                                            <% } %>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <% }else{ %>
+                    <h5 class="my-5">Nessun evento è stato creato</h5>
+                    <% } %>
         </div>
 
         <div class="text-center my-5">
@@ -102,5 +108,20 @@
         </div>
         <%- include('includes/footer.ejs') %>
 </body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function confirmPartDelete(id) {
+        if (confirm("sei sicuro di non  voler partecipare a questo evento?")) {
+            $.ajax({
+                url: '/part/' + id,
+                method: "DELETE",
+                success: function (response) {
+                    window.location.href = "/userProfile"
+                }
+
+            })
+        }
+    }
+</script>
 
 </html>

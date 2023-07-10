@@ -1,0 +1,9 @@
+.event_img_box{
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.img_default{
+    border: 1px solid var(--primary);
+}

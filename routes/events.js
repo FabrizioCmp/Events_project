@@ -5,11 +5,12 @@ const db = require('../db/database.js')
 const multer = require('multer')
 const path = require('path')
 const { log } = require('console')
+
+
 require('dotenv').config()
 
+
 // configurazione Multer per storage delle immagini
-
-
 const storage = multer.diskStorage({
     destination: (req, res, cb) => {
         cb(null, 'public/uploads/')
@@ -39,7 +40,7 @@ routerE.get('/create', (req, res) =>{
 routerE.post('/create', upload.single('image') , async (req, res) =>{
     const event = {
         creator: req.session.userID,
-        filePath: req.file.path,
+        filePath: req.file?.path,
         title: req.body.title,
         date: req.body.date,
         time: req.body.time,
@@ -48,23 +49,40 @@ routerE.post('/create', upload.single('image') , async (req, res) =>{
         description: req.body.description
     }
     eventCreated = await db.createEvent(event)
-    res.redirect('/user/profile')
+    res.redirect('/userProfile')
 })
 
 routerE.get('/update/:id', async (req,res) =>{
     const singleEvent = await db.getEventById(req.params.id)
     const creatorId = singleEvent?.creator ?? null
 
+     // formattazione data ed orario
+     let d = new Date(singleEvent.date)
+     let month = d.getMonth() + 1
+     let day = d.getDate()
+     if(month < 10){
+        month = month.toString().padStart(2, "0");
+     }
+     if(day < 10){
+        day = day.toString().padStart(2,"0")
+     }
+     
+     singleEvent.date =d.getFullYear() + "-" + month + "-" + day
+     singleEvent.time = singleEvent.time.slice(0, 5)
+
     if(req.session.logged && creatorId == req.session.userID){
         console.log(singleEvent)
         res.render('events/update', {
-            uevent: singleEvent
+            uevent: singleEvent,
+            logged: req.session.logged
         })
     }
 
 })
 
 routerE.post('/update/:id', async (req, res) =>{
+    console.log("req")
+    console.log(req.body)
     const newEvent = {
         id : req.params.id,
         title: req.body.title,
@@ -74,14 +92,24 @@ routerE.post('/update/:id', async (req, res) =>{
         max_participants: req.body.participants,
         description: req.body.description
     }
+    console.log(newEvent)
     const event_updated = await db.updateEvent(newEvent)
     res.redirect('/event/'+newEvent.id)
 })
 
 routerE.get('/:id', async (req, res) =>{
     const singleEvent = await db.getEventById(req.params.id)
+    const creator = await db.getUserById(singleEvent.creator)
+    console.log(creator[0])
+
+    // formattazione data ed orario
+    let d = new Date(singleEvent.date)
+    const month = d.getMonth() + 1
+    singleEvent.date = d.getDate() + "-" + month + "-" + d.getFullYear()
+    singleEvent.time = singleEvent.time.slice(0, 5)
+
     const participants = await db.getCountParticipants(req.params.id)
-    singleEvent.image = singleEvent.image.slice(7)
+    singleEvent.image = singleEvent.image?.slice(7)
     const creatorId = singleEvent?.creator ?? null
     console.log(participants)
     let e = ''
@@ -107,7 +135,8 @@ routerE.get('/:id', async (req, res) =>{
             enrolled: e,
             complete: c,
             part: p,
-            participants: participants[0].count
+            participants: participants[0].count,
+            logged : req.session.logged,
             })
         console.log(singleEvent.image)
     }else{
@@ -116,7 +145,9 @@ routerE.get('/:id', async (req, res) =>{
             enrolled: e,
             complete: c,
             part: p,
-            participants: participants[0].count
+            participants: participants[0].count,
+            logged : req.session.logged,
+            eventCreator: creator[0].username
         })
         console.log(singleEvent.image)
     }

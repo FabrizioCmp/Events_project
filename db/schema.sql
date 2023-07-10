@@ -18,12 +18,12 @@ CREATE TABLE Events(
     address VARCHAR(255) NOT NULL,
     max_participants INTEGER NOT NULL,
     creator INT NOT NULL,
-    FOREIGN KEY (creator) REFERENCES Users(id)
+    FOREIGN KEY (creator) REFERENCES Users(id) ON DELETE CASCADE
 )
 
 CREATE TABLE Participants(
     id INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
     event INT NOT NULL,
-    FOREIGN KEY (event) REFERENCES Events(id)
+    FOREIGN KEY (event) REFERENCES Events(id) ON DELETE CASCADE
 );
