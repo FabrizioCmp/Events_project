@@ -1,6 +1,30 @@
 
-<header>
-    <div class="my-3">
-        <h1 class="text-center">HEADER</h1>
+
+
+    
+<header class="py-3">
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-6 d-flex align-items-center">
+                    <a href="/" class="logo">EventOra</a>
+                </div>
+
+                <div class="col-6">
+                    <div class="h-100 d-flex justify-content-end align-items-center ">
+                        <% if(!locals.logged){ %>
+                            <a class="mybtn_neg mx-2" href="/login">Accedi</a>
+                            <a class="mybtn" href="/register">Registrati</a>
+                            <% }else{ %>
+                                <a class="mybtn mx-2" href="/userprofile">Profilo</a>
+                                <a class="mybtn_neg" href="/logout">Logout</a>
+                                <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </header>
+
+</html>
+

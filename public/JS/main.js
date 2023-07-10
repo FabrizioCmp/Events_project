@@ -28,4 +28,4 @@ function validatePassword(event){
 
 }
 
-//setInterval(changeEvent, 1000)
+setInterval(changeEvent, 3000)

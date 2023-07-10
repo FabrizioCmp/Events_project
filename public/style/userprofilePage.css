@@ -1,0 +1,16 @@
+.info_profile{
+    background-color: var(--primary);
+    color: white;
+    padding: 5px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.eventPartLink{
+    text-decoration: none;
+    color: black;
+}
+
+.part_title{
+    font-size: large;
+}

@@ -3,6 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <!-- Font -->
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+ 
+     <!-- css -->
+     <link rel="stylesheet" href="../style/main.css">
+     <link rel="stylesheet" href="../style/indexPage.css">
+     <link rel="stylesheet" href="../style/footer.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <title>Event page</title>
@@ -14,6 +23,7 @@
     <div class="container">
         <h3><%= event.title%></h3>
         <h3><%= event.description%></h3>
+        <h3>Partecipanti: <%= participants%> / <%= event.max_participants %></h3>
         <% if(event.image){ %>
             <img style="width: 100px;" src="/<%= event.image  %>" alt="immagine evento">
         <% } %>  
@@ -26,6 +36,15 @@
             <input class="d-none" type="number" name="eventId" value="<%= event.id  %>">
         </div>
         <button>Partecipa</button>
+        <% if(locals.enrolled){ %>
+            <h4>Sei iscritto all'evento</h4>
+        <% } %>
+        <% if(locals.complete){ %>
+            <h4>Evento al completo</h4>
+        <% } %>
+        <% if(locals.part){ %>
+            <h4>Partecipi già a questo evento</h4>
+        <% } %>
     </form>
 
     <a class="btn btn-primary" href="/">Home</a>

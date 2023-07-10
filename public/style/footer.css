@@ -1,0 +1,10 @@
+footer{
+ margin-top: 20px;
+ border-top: 1px solid var(--primary);
+ padding-top: 20px;
+}
+
+ul{
+    list-style: none;
+
+}

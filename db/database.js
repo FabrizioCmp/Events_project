@@ -128,12 +128,20 @@ async function getCountParticipants(event){
 }
 async function deleteEvent(id){
     const event = await pool.query(`
-            DELETE FROM Events
+            DELETE FROM Events 
             WHERE id = ?
         `, [id])
 }
 
-async function getParticipantByEmail(email){
+async function addParticipant(email, event){
+    const part = await pool.query(`
+            INSERT INTO Participants (email, event)
+            VALUES (?,?)
+    `,[email, event])
+    return part[0]
+}
+
+async function getParticipantByEmail(email,){
     const participant = await pool.query(`
             SELECT * 
             FROM Participants
@@ -147,5 +155,40 @@ async function getParticipantByEmail(email){
      } 
 }
 
+async function getThisEventUserPart(email, event){
+    const participant = await pool.query(`
+            SELECT * 
+            FROM Participants
+            WHERE email = ? AND event = ?
+        `, [email, event])
 
-module.exports = {getUserById, createUser, getUserByEmail, getUserByUsername, createEvent, getEvents, getUserEvents, getEventById, updateEvent, getParticipantByEmail , deleteEvent, getMaxParticipants, getCountParticipants}
+    if(participant[0].length != 0){
+            return participant[0]
+     }else{
+            return null
+     } 
+}
+
+async function getUserPart(email){
+    const partEvents = await pool.query(`
+            SELECT event 
+            FROM Participants
+            WHERE email = ?
+    `, [email])
+    let partList = []
+    partEvents[0].forEach(element => {
+        partList.push(element.event)
+    });
+    return partList
+}
+
+async function getEventsfromPart(arrayId){
+    const events = await pool.query(`
+                SELECT *
+                FROM Events
+                WHERE id IN (?)
+    `, [arrayId])
+    return events[0]
+}
+
+module.exports = {getUserById, createUser, getUserByEmail, getUserByUsername, createEvent, getEvents, getUserEvents, getEventById, updateEvent, getParticipantByEmail , deleteEvent, getMaxParticipants, getThisEventUserPart, getEventsfromPart, getCountParticipants, addParticipant, getUserPart}

@@ -29,15 +29,25 @@ app.listen(process.env.SERVER_PORT, () => {
 })
 
 //Rotte base
-app.get("/", middleware, async (req, res) => {
+app.get("/", async (req, res) => {
     const elist = await db.getEvents()
+    elist.forEach(element => {
+        let d = new Date(element.date)
+        element.date = d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear()
+    });
     let uEvents = null
     logged = req.session.logged
-    uName = req.session.userName
+    uName = req.session.user
     if(logged){
         id = req.session.userID
         uEvents = await db.getUserEvents(id)
+        uEvents.forEach(element => {
+            let d = new Date(element.date)
+            element.date = d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear()
+            element.image = element.image.slice(7)
+        });
     }
+    console.log(uName)
     res.render('index', {
         text: 'WORLD',
         logged: logged,
@@ -117,10 +127,11 @@ app.post('/login', async (req, res) => {
                 }
 
                 if (result) {
-                    req.session.user = usr
+                    console.log(usr)
+                    req.session.user = usr.username
                     req.session.userID = usr.id
                     req.session.logged = true
-                    res.redirect('user/profile',)
+                    res.redirect('/userprofile',)
                 } else {
                     res.render('login', {
                         oldUsername: username,
@@ -144,6 +155,41 @@ app.post('/login', async (req, res) => {
 app.get("/logout", (req, res) => {
     req.session.destroy()
     res.redirect('login')
+})
+
+app.get("/userProfile", async(req,res) =>{
+   
+    if(req.session.logged == true){
+        //query a database
+        const u = await db.getUserById(req.session.userID) // ritorna informazioni utente loggato
+        const Euser = await db.getUserEvents(req.session.userID) // ritorna eventi creati dall' utente
+        const userPart = await db.getUserPart(u[0].email)  //ritrona array di ID relativi algli eventi partecipati dall'utente
+        const userEparts = await db.getEventsfromPart(userPart) // ritorna array degli eventi partecipati dall'utente
+
+        console.log(u[0])
+
+        //modifica formato data e orario
+        userEparts.forEach(element => {
+            let d = new Date(element.date)
+            element.date = d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear()
+            element.time = element.time.slice(0,5)
+        });
+        Euser.forEach(element => {
+            let d = new Date(element.date)
+            element.date = d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear()
+            element.time = element.time.slice(0,5)
+        });
+
+        res.render('userprofile',{
+            logged: req.session.logged,
+            user: u[0],
+            userEvents: Euser,
+            userParticipations: userPart,
+            userEventsParticipations : userEparts
+        })
+    }else{
+        res.redirect('/login')
+    }
 })
 
 

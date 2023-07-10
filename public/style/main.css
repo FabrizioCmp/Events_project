@@ -1,11 +1,67 @@
+* {
+    font-family: Nunito;
+}
+
+
+
 .mycard{
     width: 200px;
     height: 150px;
-    background-color: brown;
-    margin-top: 10px;
-    border: 2px solid black;
+    background-color: white;
+    border: 2px solid var(--primary);
+    box-shadow: 5px 5px 10px black;
+    margin-right: 3px;
+    border: 2px solid var(--primary);
     border-radius: 10px;
     display: inline-block;
+    padding: 5px;
+}
+
+.mycardUser{
+    width: 300px;
+    height: 310px;
+    background-color: white;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.mycard:hover{
+    background-color: var(--primary);
+}
+
+.mycardUser:hover{
+    box-shadow: 5px 5px 10px black;
+}
+
+.box_imgUser{
+    width: 100%;
+    height: 50%;
+    margin: auto;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+}
+
+.mybtn{
+    background-color: var(--primary);
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 5px 10px;
+}
+
+.mybtn_neg{
+    color: var(--primary);
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 5px 10px;
+}
+
+header{
+    border-bottom: 1px solid var(--primary);
+    margin-bottom: 2rem;
 }
 
 .card_link{
@@ -13,13 +69,19 @@
     color: black;
 }
 
-.horizontal_box{
-    width: 500px;
-    overflow-x: scroll;
-    white-space: nowrap;
-    background-color: blue;
+.logo{
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 2rem;
+    font-weight: bold;
 }
 
-.horizontal_box::-webkit-scrollbar{
-    width: 0px;
+.form_section{
+    background-color: var(--primary);
 }
+.form_create{
+    margin: auto;
+    width: 30%;
+}
+
+
