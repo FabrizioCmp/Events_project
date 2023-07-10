@@ -3,7 +3,7 @@ const eventEl = document.getElementById('event')
 events = [
     "raduno",
     "party",
-    "rinfresco",
+    "meeting",
     "incontro",
     "concerto",
     "appuntamento",

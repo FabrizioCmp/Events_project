@@ -74,16 +74,16 @@
                 <h2>Registrati</h2>
                 <form action="/register" method="POST">
                     <div class="inputBox">
-                        <input type="text" id="username" name="username" value="<%= oldUsername  %>" placeholder="Username">
+                        <input type="text" id="username" name="username" value="<%= oldUsername  %>" placeholder="Username" required>
                     </div>
                     <div class="inputBox">
                         <input type="email" id="email" name="email" value="<% oldEmail %>" placeholder="Email" required>
                     </div>
                     <div class="inputBox">
-                        <input type="password" id="password" name="password" placeholder="Password">
+                        <input type="password" id="password" name="password" placeholder="Password" required>
                     </div>
                     <div class="inputBox">
-                        <input type="password" id="confirm" name="confirm" placeholder="Conferma password">
+                        <input type="password" id="confirm" name="confirm" placeholder="Conferma password" required>
                     </div>
                     <div class="inputBox">
                         <button class="mybtn_neg mb-3">Registrati</button>
