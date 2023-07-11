@@ -3,6 +3,7 @@ const mysql = require('mysql2')
 const bcrypt = require('bcrypt')
 const db = require('./db/database')
 const session = require('express-session')
+const f = require('./utilities/functions')
 
 
 require('dotenv').config()
@@ -35,7 +36,9 @@ app.get("/", async (req, res) => {
     const elist = await db.getEvents()
     elist?.forEach(element => {
         let d = new Date(element.date)
-        element.date = d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear()
+        let month = d.getMonth() + 1
+        element.date = d.getDate() + "-" + month + "-" + d.getFullYear()
+        element.time = element.time.slice(0, 5)
     });
     let uEvents = null
     logged = req.session.logged
@@ -45,8 +48,10 @@ app.get("/", async (req, res) => {
         uEvents = await db.getUserEvents(id)
         uEvents.forEach(element => {
             let d = new Date(element.date)
-            element.date = d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear()
-            element.image = element.image.slice(7)
+            let month = d.getMonth() + 1
+            element.date = d.getDate() + "-" + month + "-" + d.getFullYear()
+            element.image = element.image?.slice(7)
+            element.time = element.time.slice(0, 5)
         });
     }
     console.log(uName)
@@ -71,20 +76,16 @@ app.get('/register', (req, res) => {
 
 app.post('/register', async (req, res) => {
 
-    user = await db.getUserByUsername(req.body.username)
-    errorPswd = false
-    errorUser = false
+    let user = await db.getUserByUsername(req.body.username)
+    let errorPswd = false
+    let errorUser = false
+    let errorEmail = false
 
     //se user = null allora si tratta di un nuovo utente -> controllo vadilità pswd
     if (user == null) {
 
         //controllo uguaglianza password e password di conferma
-        if (req.body.password == req.body.confirm) {
-            const hashedpswd = await bcrypt.hash(req.body.password, 10)
-            user = await db.createUser(req.body.email, req.body.username, hashedpswd)
-            res.redirect('login')
-
-        } else {
+        if (req.body.password !== req.body.confirm) {
             // le due password sono diverse
             errorPswd = true
             res.render('register', {
@@ -93,7 +94,23 @@ app.post('/register', async (req, res) => {
                 oldPassword: req.body.password,
                 differentPswd: errorPswd,
             })
+
+        } else if (f.errorEmail(req.body.email)) {
+            //errore sintassi email
+            errorEmail = true
+            res.render('register', {
+                oldUsername: req.body.username,
+                oldEmail: req.body.email,
+                oldPassword: req.body.password,
+                emailError: errorEmail,
+            })
+
+        } else {
+            const hashedpswd = await bcrypt.hash(req.body.password, 10)
+            user = await db.createUser(req.body.email, req.body.username, hashedpswd)
+            res.redirect('login')
         }
+
     } else {
         // si tratta di un username già presente -> reindirizzo al form di registrazione mosrtando un Alert
         // e ricompilando i campi con i dati precedentemente inseriti

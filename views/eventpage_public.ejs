@@ -63,7 +63,7 @@
                         </div>
                         <div>
                             <span><b class="pe-3">Indirizzo:</b></span><span>
-                                <%=event.address %> / <%=event.max_participants %>
+                                <%=event.address %> 
                             </span>
                         </div>
                         <div>
@@ -85,13 +85,18 @@
                   </div>
                 <% } %>
                     <% if(locals.complete){ %>
-                        <div class="alert alert-danger" role="alert">
+                        <div class="alert alert-danger w-25" role="alert">
                             Evento al completo
                           </div>
                         <% } %>
                             <% if(locals.part){ %>
                                 <div class="alert alert-warning w-25" role="alert">
                                   Partecipi già a questo evento
+                                  </div>
+                                <% } %>
+                            <% if(locals.register){ %>
+                                <div class="alert alert-warning w-25" role="alert">
+                                  Per poter parteciapre ad un evento devi essere registrato. <a href="/register">Registrati</a>
                                   </div>
                                 <% } %>
             <form action="/event/participate" method="POST">

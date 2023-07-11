@@ -56,7 +56,7 @@
         <button class="btn btn-primary">Register</button>
     </form> -->
 
-    <% if(locals.differentPswd || locals.userTaken){%>
+    <% if(locals.differentPswd || locals.userTaken || locals.emailError){%>
         <div class="alert alert-warning w-50 text-center m-auto my-3" role="alert">
             <h3 class="text-center">&#9888</h3>
             <% if(locals.differentPswd){%>
@@ -65,6 +65,10 @@
             <% if(locals.userTaken){%>
             <p class="mb-0">- Username già in uso</p>
             <% } %>
+            <% if(locals.emailError){%>
+            <p class="mb-0">- Inserire una email valida</p>
+            <% } %>
+    
           </div>
     <% } %>
 
@@ -89,7 +93,7 @@
                         <button class="mybtn_neg mb-3">Registrati</button>
                     </div>
                     <p class="forget">Hai già un account? 
-                        <a href="/login">Login</a>
+                        <a href="/login">Accedi</a>
                     </p>
                 </form>
             </div>

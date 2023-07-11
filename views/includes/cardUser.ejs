@@ -1,19 +1,35 @@
 <a class="card_link" href="/event/<%=card.id%>">
-    <div class="mycardUser m-auto">
-        <div class="box_imgUser">
-            <img class="img-fluid" src="/<%=card.image%>" alt="">
-        </div>
-        <div class="text-center" >
-            <b><%= card.title %> </b>
-        </div>
-        <div>
-            <span class="mr-2">&#128337;</span> <%= card.time %>
-        </div>
-        <div>
-           <span class="mr-2">&#128197;</span> <%= card.date %>
-        </div>
-        <div>
-            <%= card.address %>
-        </div>
-    </div>    
+    <div class="mycardUser m-auto mb-4">
+        <% if(card.image){ %>
+            <div class="box_imgUser">
+                <img class="img-fluid" src="/<%=card.image  %>" alt="immagine evento">
+            </div>
+            <% }else{ %>
+                <div class="box_imgUser">
+                    <img class="img-fluid img_default" src="/uploads/default.png" alt="immagine evento">
+                    </div>
+                    <% } %>
+
+                        <div class="text-center">
+                            <b>
+                                <%= card.title %>
+                            </b>
+                        </div>
+                        <div class="ps-2">
+                            <span>&#128337;</span>
+                            <%= card.time %>
+                        </div>
+                        <div class="ps-2">
+                            <span>&#128197;</span>
+                            <%= card.date %>
+                        </div>
+                        <div class="ps-2">
+                            <%= card.address %>
+                        </div>
+                        <div class="ps-2">
+                            <span><b class="pe-3">Max partecipanti:</b></span><span>
+                               <%=card.max_participants %>
+                            </span>
+                        </div>
+                </div>
 </a>

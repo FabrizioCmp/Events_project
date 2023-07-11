@@ -10,12 +10,14 @@
     background-color: white;
     border: 2px solid var(--primary);
     box-shadow: 5px 5px 10px black;
-    margin-right: 3px;
+    margin-right: 10px;
     border: 2px solid var(--primary);
     border-radius: 10px;
     display: inline-block;
     padding: 5px;
+    overflow: scroll;
 }
+
 
 .mycardUser{
     width: 300px;
@@ -23,6 +25,7 @@
     background-color: white;
     border-radius: 10px;
     background-color: white;
+    overflow: hidden;
 }
 
 .mycard:hover{
@@ -94,6 +97,11 @@ header{
     border-radius: 5px;
     padding: 5px  10px;
     box-shadow: 5px 5px 10px black;
+}
+
+.link_event{
+    text-decoration: none;
+    color: black;
 }
 
 

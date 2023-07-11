@@ -3,7 +3,7 @@ require('dotenv').config()
 
 const pool =  mysql.createPool({
     host: process.env.DB_HOST,
-    user: 'root',
+    user: process.env.DB_USER,
     password: process.env.DB_PSW,
     database: process.env.DB_NAME
 }).promise()
@@ -64,7 +64,7 @@ async function getEvents(){
     const events = await pool.query(`
             SELECT * 
             FROM Events
-            ORDER BY date, time
+            ORDER BY date , time 
         `)
     if(events[0].length != 0){
         return events[0]
@@ -78,6 +78,7 @@ async function getUserEvents(id){
             SELECT *
             FROM Events 
             WHERE creator = ?
+            ORDER BY date , time 
         `, [id])
 
     return events[0]

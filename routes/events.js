@@ -115,6 +115,7 @@ routerE.get('/:id', async (req, res) =>{
     let e = ''
     let c = ''
     let p = ''
+    let r = ''
     if(req.query.enrolled){
          e = req.query.enrolled
          console.log(e)
@@ -126,6 +127,10 @@ routerE.get('/:id', async (req, res) =>{
     if(req.query.part){
          p = req.query.part
          console.log(p)
+    }
+    if(req.query.register){
+        r = req.query.register
+        console.log(r)
     }
     
 
@@ -145,6 +150,7 @@ routerE.get('/:id', async (req, res) =>{
             enrolled: e,
             complete: c,
             part: p,
+            register: r,
             participants: participants[0].count,
             logged : req.session.logged,
             eventCreator: creator[0].username
@@ -159,18 +165,18 @@ routerE.post("/participate", async (req,res) =>{
     const participant = await db.getThisEventUserPart(req.body.email, req.body.eventId)
     const eventMaxPart = await db.getMaxParticipants(req.body.eventId)
     const countParticipants = await db.getCountParticipants(req.body.eventId)
-    //console.log("LOG partecipazione")
-    //console.log(user)
-    //console.log(participant)
-    //console.log(eventMaxPart[0])
-    //console.log(countParticipants[0])
-    //console.log("end LOG")
+    console.log("LOG partecipazione")
+    console.log(user)
+    console.log(participant)
+    console.log(eventMaxPart[0])
+    console.log(countParticipants[0])
+    console.log("end LOG")
     if(user != null ){
         if(participant == null && (countParticipants[0].count < eventMaxPart[0].max_participants)){
             res.redirect('/event/'+ req.body.eventId + '?enrolled=true')
             db.addParticipant(user.email, req.body.eventId)
             console.log("iscritto")
-        }else if(countParticipants < eventMaxPart){
+        }else if(countParticipants[0].count >= eventMaxPart[0].max_participants){
             res.redirect('/event/'+ req.body.eventId + '?complete=true')
             console.log("L'evento è al completo")
         }else{
@@ -179,7 +185,8 @@ routerE.post("/participate", async (req,res) =>{
         }
        
     }else {
-        res.redirect('/register')    
+        res.redirect('/event/'+ req.body.eventId + '?register=true')
+        console.log('devi essere registrato per partecipare')   
     }
 })
 

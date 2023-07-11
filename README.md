@@ -18,10 +18,11 @@ npm install
 Nella cartella del progetto creare un file `.env` con le seguenti variabili e rispettivi valori. Es:
 ```
 DB_HOST = '127.0.0.1'
+DB_USER = 'root'
 DB_PSW = 'passwordDelDatabaseMysql'
 DB_NAME = 'nomeDelDatabseMysql' 
 
-SESSION_SECRET = 'strigaPerCodificaSessione'
+SESSION_SECRET = 'sessionsecret'
 
 SERVER_PORT = 3001
 ```
