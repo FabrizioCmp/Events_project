@@ -5,7 +5,7 @@ Per il Database è stato utiliizato **Mysql**
 
 ## ==Avvio progetto==
 
-Scaricare il progetto 
+Clonare il progetto in locale
 
 Installare NodeJs - https://nodejs.org/en
 Installare Mysql - https://dev.mysql.com/downloads/mysql/
